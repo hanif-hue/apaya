@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- ============================================================
+     KENAPA HALAMAN INI DIPERLUKAN (baca kalau penasaran):
+     Ikon custom "Add to Home Screen" yang ditaruh langsung di
+     Index.html Apps Script sering GAGAL muncul (jadi kotak huruf
+     "M") karena:
+     1. URL exec Apps Script itu sebenarnya me-redirect ke domain
+        lain (script.googleusercontent.com) di baliknya -- Safari
+        kadang gagal "menangkap" ikon pas proses redirect itu.
+     2. Kalau dibuka lewat Google Sites, ikon yang kepakai adalah
+        ikon punya Google Sites, bukan punya app ini sama sekali.
+
+     Solusinya: taruh halaman SEDERHANA ini (file PNG asli, bukan
+     base64) di GitHub Pages -- domain-nya stabil, tidak redirect,
+     dan kita yang pegang penuh <head>-nya. Halaman ini lalu
+     menampilkan app APD kamu secara penuh layar lewat iframe.
+     Yang di-"Add to Home Screen" adalah URL GitHub Pages ini,
+     ikonnya jadi 100% akurat & konsisten.
+     ============================================================ -->
+
+<title>Manajemen APD Crew Kapal</title>
+
+<!-- Ikon asli (file PNG, bukan data URI) -- ini kunci utamanya -->
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0a52d6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="APD Crew Kapal">
+
+<style>
+  html, body{
+    margin:0; padding:0; width:100%; height:100%;
+    background:#0a52d6; /* sama dengan warna topbar app -- kalau ada celah
+                            sekejap sebelum iframe termuat, warnanya tetap
+                            nyambung, bukan putih */
+    overflow:hidden;
+  }
+  /* Iframe menutup SELURUH layar termasuk di balik notch/status bar
+     (viewport-fit=cover + inset:0), supaya app di dalamnya berperilaku
+     penuh layar persis kalau dibuka langsung. */
+  #app{
+    position:fixed; inset:0; width:100%; height:100%;
+    border:0; display:block;
+  }
+  #loading{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:14px; color:#fff; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#0a52d6; transition:opacity .3s ease;
+  }
+  #loading.hide{opacity:0; pointer-events:none;}
+  .spinner{
+    width:34px; height:34px; border-radius:50%;
+    border:3px solid rgba(255,255,255,.3); border-top-color:#fff;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #loading span{font-size:14px; opacity:.85;}
+</style>
+</head>
+<body>
+
+  <!-- GANTI URL DI BAWAH INI kalau suatu saat kamu redeploy Apps Script
+       dan dapat URL /exec yang baru. Cukup ubah di SINI SAJA -- ikon &
+       shortcut Home Screen yang sudah ter-install TIDAK perlu diinstall
+       ulang, karena mereka menunjuk ke halaman GitHub Pages ini, bukan
+       langsung ke URL Apps Script-nya. -->
+  <iframe
+    id="app"
+    src="https://script.google.com/a/macros/ptksa.id/s/AKfycbz46-fkfXFyz8Z2LeL8ConWDWdQ1msF0WVINpI-2gT1MtJM5eqwDlRJZQZHUvCiMbudmg/exec"
+    title="Manajemen APD Crew Kapal"
+    allow="clipboard-write"
+    onload="document.getElementById('loading').classList.add('hide')"
+  ></iframe>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <span>Memuat APD Crew Kapal…</span>
+  </div>
+
+</body>
+</html>
